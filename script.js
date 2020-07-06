@@ -2,40 +2,133 @@
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
 const googleApiKey = 'AIzaSyCxrK1XHc-SVjAMhKBwz6-Z0oZCvZrXk-A';
-const nutritionixApiURL = 'https://trackapi.nutritionix.com/v2/search/instant';
-const nutritionixId = '0f95c1c1';
-const nutritionixApiKey = '68735624af11791c9bc823caa9321cd22c31cbcf';
+const edamamApiURL = 'https://api.edamam.com/api/food-database/v2';
+const edamamId = '347aa534';
+const edamamApiKey = '775483288483a637da90fb07604782c7';
+let food = []; //map and join, think STORE databank from quiz app
 
-let food = [] //map and join, think STORE databank form quiz app
 
-//1st form with gender, height, weight, age
-//2nd form user adds foods and submits for total calories --> calculate BMR --> calculate caloricDeficit
+//Calculators:
 
-function generateBMR(gender, height, weight, age) {
-  const a = gender ? 88.362 : 447.593
-  const b = gender ? 13.397 : 9.247
-  const c = gender ? 4.799 : 3.098
-  const d = gender ? 5.677 : 4.330
-  return a + (b * (weight * 0.453592)) + (c * (height * 2.54)) - (d * age);
+function generateBMR() {
+  console.log("BMR calculated");
+  if ($(".gender") === "Male") {
+    return ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 5
+  } else {
+    return ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 161 
+  }
+}
+
+//Will this operate to sum all the calories?
+function calculateCalories() {
+  const calories = responseJson.calories; //need to acquire 'nf_calories' from API and sum
+  return responseJson.food_name.filter(food => food_name.calories).length;
 }
 
 function generateCalorieBurn() {
-  const caloricDeficit = responseJson.calories - generateBMR();
+  const caloricDeficit = calculateCalories() - generateBMR();
 }
 
+
+
+//Page Generators:
+function generateStartPage() {
+  return `
+      <p>Enter your gender, height, weight, and age to yield your BMR, or
+          basal metabolic rate (how many calories you burn in a day just 
+          sitting still).</p> 
+      <p>Then enter food items or your daily calorie
+          intake to calculate a "goal caloric deficit" based against your BMR.</p>
+      <p>Workout videos you can do at home will display or follow one of the 
+          links below them to do something different!</p>
+      `
+}
+
+function generateInputPage(food) {
+    const foodList = `
+              <ul class="food-list">
+                  ${food.map((foodItem, index) => 
+                    `<li class="food-item"><label for="food${index}">
+                      ${foodItem}
+                    </label></li>
+                    `)
+                  .join("\n")
+                }
+              </ul>
+              `
+      return `
+      <form class="bmr-form">
+        <fieldset name="user-search">
+          <legend>Enter Your Info:</legend>
+            <ul>
+              <li>
+                <label for="Gender">Gender:</label>
+                <select name="cars" id="cars">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </li>
+              <li>Height:</li>
+              <input type="number" id="height" name="height" placeholder="70 (inches)" required>
+              <li>Weight:</li>
+              <input type="number" id="weight" name="weight" placeholder="170 (pounds)" required>
+              <li>Age:</li>
+              <input type="number" id="age" name="age" placeholder="23 (years)" required>
+            </ul>
+              <button type="submit" >Calculate BMR</button>
+                ${generateBMR()}
+        </fieldset>
+      </form>
+      
+      <form class="food-form">
+        <fieldset name="food-search">
+          <legend>Enter Your Food:</legend>
+            <input type="text" class="food-query" placeholder="e.g. 1 cup Cheerios with 1 cup 
+            skim milk and half banana" required>
+            <button type="submit">Add Food</button>
+              ${foodList}
+            <img src="images/edamam-img.png" id="logo" alt="edamam logo">
+        </fieldset>      
+      </form>
+      <form class="calorie-form">
+        <fieldset>
+          <legend>Enter Your Daily Calories:</legend>
+            <input type="number" class="calorie-query" placeholder="2000" required>
+            <button type="submit">Submit</button>
+        </fieldset>
+        
+      </form>
+      `
+    /*2nd form: user adds foods or daily calories and submits for total calories --> calculate BMR --> 
+calculate caloricDeficit. Double 'required' inputs? Or one or the other?*/
+}
+
+
+
+//Server request formatting:
 function formatQueryParams(params) {
   const queryItems = Object.keys(params)
     .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
   return queryItems.join('&');
 }
 
-function getFood(calories) {
+
+
+//Nutritionix Data:
+function getFood(food_name) {
   const headers = {
-    x-app-id: nutritionixId,
-    x-app-key: nutritionixApiKey
+    app_id: edamamId,
+    app_key: edamamApiKey
+  }
+  const params = {
+    query: food_name
   };
 
-  return fetch(nutritionixApiURL)
+  //Can this be duplicated like this for both Nutritionix and YouTube fetches?
+  const queryString = formatQueryParams(params);
+  const foodURL = edamamApiURL + '?' + queryString;
+
+  return fetch(foodURL, {headers})
   .then(response => {
     if (response.ok) {
       return response.json();
@@ -43,10 +136,11 @@ function getFood(calories) {
     throw new Error(response.statusText);
   })
   .catch(err => {
-    $('#error-message').text(`Something went wrong with {other API}: ${err.message}`);
+    $('#error-message').text(`Something went wrong with Nutritionix: ${err.message}`);
   });
 }
 
+//YouTube Data:
 function displayVideoResults(responseJson) {
   console.log(responseJson);
   $('#results-list').empty();
@@ -55,16 +149,16 @@ function displayVideoResults(responseJson) {
       `<li><h3>${responseJson.items[i].snippet.title}</h3>
       <p>${responseJson.items[i].snippet.description}</p>
       <video src='${responseJson.items[i].search}' controls>(“Video Not Supported”)</video>
-      </li>`
+      </li>
+      `//add 'other' links
     )};
   $('#results').removeClass('hidden');
 };
 
-
 function getVideos(caloricDeficit, maxResults=3) {
   const params = {
     key: googleApiKey,
-    q: `${caloricDeficit} calories workout` ,
+    q: `${caloricDeficit} calories workout`,
     part: 'snippet',
     maxResults,
     type: 'video',
@@ -72,11 +166,11 @@ function getVideos(caloricDeficit, maxResults=3) {
   };
 
   const queryString = formatQueryParams(params)
-  const url = videoSearchURL + '?' + queryString;
+  const videoURL = videoSearchURL + '?' + queryString;
 
-  console.log(url);
+  console.log(videoURL);
 
-  return fetch(url)
+  return fetch(videoURL)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -89,15 +183,61 @@ function getVideos(caloricDeficit, maxResults=3) {
 }
 
 
-function watchForm() {
-  $('form').submit(event => {
+
+//Page Displayers:
+function displayStartPage() {
+  displayPage(generateStartPage())
+}
+
+function displayInputPage() {
+  console.log("displaying page")
+  displayPage(generateInputPage(food))
+}
+
+function displayPage(html) {
+  $(".user-form").html(html)
+}
+
+
+
+//Handlers:
+function handleClickStart() {
+  $("main").on("click", ".start-button", (event) => {
+      displayInputPage()
+  })
+}
+
+function handleSubmitBMR() {
+  $('main').on("submit", ".bmr-form", event => {
     event.preventDefault();
-    const searchTerm = $('#search-term').val();
-    const maxResults = $('#max-results').val();
-    getFood(calories)
-    getVideos(caloricDeficit, maxResults)
-    .then(responseJson => displayVideoResults(responseJson))
+    const male = $(".weight") * 10 + $(".height") * 6.25 - $(".age") * 5 + 5;
+    const female = $(".weight") * 10 + $(".height") * 6.25 - $(".age") * 5 + 161;
+    return `<span>${generateBMR() ? male : female}</span>`
   });
 }
 
-$(watchForm);
+function handleSubmitFood() {
+  $('main').on("submit", ".food-form", event => {
+    event.preventDefault();
+  const foodQuery = $(".food-query")
+    const foodName = foodQuery.val()
+    foodQuery.val("")
+    getFood(foodName).then(responseJson => console.dir(responseJson))
+  });
+}
+
+function handleSubmitCalorie() {
+  $('main').on("submit", ".calorie-form", event => {
+    event.preventDefault();
+    
+  });
+}
+
+function setupEventHandlers() {
+  handleClickStart()
+  handleSubmitBMR()
+  handleSubmitFood()
+  handleSubmitCalorie()
+}
+
+$(setupEventHandlers);
