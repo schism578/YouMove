@@ -2,10 +2,10 @@
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
 const googleApiKey = 'AIzaSyCxrK1XHc-SVjAMhKBwz6-Z0oZCvZrXk-A';
+let caloricDeficit = $(".calorie-query") - calculateBMR();
 
 //Calculators:
 function calculateBMR() {
-  console.log("BMR calculated");
   if ($(".gender") === "male") {
     return ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 5
   } else {
@@ -14,7 +14,6 @@ function calculateBMR() {
 }
 
 function generateCalorieBurn() {
-  const caloricDeficit = $(".calorie-query") - calculateBMR();
   return `${caloricDeficit}`
 }
 
@@ -33,7 +32,6 @@ function generateStartPage() {
 }
 
 function generateInputPage(food) {
-      const displayBMR = `$`
       return `
       <form class="bmr-form">
         <fieldset name="user-search">
@@ -146,8 +144,8 @@ function handleClickStart() {
 function handleSubmitBMR() {
   $('main').on("submit", ".bmr-form", event => {
     event.preventDefault();
-    const male = $(".weight") * 10 + $(".height") * 6.25 - $(".age") * 5 + 5;
-    const female = $(".weight") * 10 + $(".height") * 6.25 - $(".age") * 5 + 161;
+    const male = ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 5;
+    const female = ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 161;
     return `<span>${calculateBMR(gender) ? male : female}</span>`
   });
 }
@@ -158,7 +156,7 @@ function handleSubmitCalories() {
     const calorieQuery = $(".calorie-query");
     const calories = calorieQuery.val();
     generateCalorieBurn(calories);
-    displayVideoResults(caloricDeficit, maxResults);
+    displayVideoResults(caloricDeficit);
   });
 }
 
