@@ -11,7 +11,9 @@ body {
   }
 
 ul {
-    display: flex;
-    flex-direction: column;
     list-style-type: none;
+}
+
+.food-query, .calorie-query {
+    width: 80%;
 }
