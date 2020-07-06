@@ -112,6 +112,7 @@ function getVideos(caloricDeficit, maxResults=3) {
       }
       throw new Error(response.statusText);
     })
+    .then(responseJson => displayResults(responseJson))
     .catch(err => {
       $('#error-message').text(`Something went wrong with YouTube: ${err.message}`);
     });
@@ -157,7 +158,7 @@ function handleSubmitCalories() {
     const calorieQuery = $(".calorie-query");
     const calories = calorieQuery.val();
     generateCalorieBurn(calories);
-    displayVideoResults();
+    displayVideoResults(caloricDeficit, maxResults);
   });
 }
 
