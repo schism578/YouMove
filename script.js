@@ -2,15 +2,15 @@
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
 const googleApiKey = 'AIzaSyCxrK1XHc-SVjAMhKBwz6-Z0oZCvZrXk-A';
-let caloricDeficit = $(".calorie-query") - calculateBMR();
+let caloricDeficit = $('.calorie-query') - calculateBMR();
 
 //Calculators:
 function calculateBMR() {
-  const weight = parseInt( $("#weight").val() );
-  const height = parseInt( $("#height").val() );
-  const age = parseInt( $("#age").val() );
+  const weight = parseInt( $('#weight').val() );
+  const height = parseInt( $('#height').val() );
+  const age = parseInt( $('#age').val() );
 
-  if ($("#gender").val() === "male") {
+  if ($('#gender').val() === 'male') {
     return (weight * 0.453592) * 10 + (height * 2.54) * 6.25 - age * 5 + 5
   } else {
     return (weight * 0.453592) * 10 + (height * 2.54) * 6.25 - age * 5 + 161
@@ -37,33 +37,33 @@ function generateStartPage() {
 
 function generateInputPage(food) {
       return `
-      <form class="bmr-form">
-        <fieldset name="user-search">
+      <form class='bmr-form'>
+        <fieldset name='user-search'>
           <legend>Enter Your Info:</legend>
             <ul>
               <li>
-                <label for="Gender">Gender:</label>
-                <select name="gender" id="gender">
-                  <option value="male">male</option>
-                  <option value="female">female</option>
+                <label for='Gender'>Gender:</label>
+                <select name='gender' id='gender'>
+                  <option value='male'>male</option>
+                  <option value='female'>female</option>
                 </select>
               </li>
               <li>Height:</li>
-              <input type="number" id="height" name="height" placeholder="70 (inches)" required>
+              <input type='number' id='height' name='height' placeholder='70 (inches)' required>
               <li>Weight:</li>
-              <input type="number" id="weight" name="weight" placeholder="170 (pounds)" required>
+              <input type='number' id='weight' name='weight' placeholder='170 (pounds)' required>
               <li>Age:</li>
-              <input type="number" id="age" name="age" placeholder="23 (years)" required>
+              <input type='number' id='age' name='age' placeholder='23 (years)' required>
             </ul>
-              <button type="submit" >Calculate BMR</button>
+              <button type='submit' >Calculate BMR</button>
         </fieldset>
       </form>
 
-      <form class="calorie-form">
+      <form class='calorie-form'>
         <fieldset>
           <legend>Enter Your Daily Calories:</legend>
-            <input type="number" class="calorie-query" placeholder="2000" required>
-            <button type="submit">Submit</button>
+            <input type='number' class='calorie-query' placeholder='2000' required>
+            <button type='submit'>Submit</button>
         </fieldset>
       </form>
       `
@@ -132,32 +132,32 @@ function displayInputPage() {
 }
 
 function displayPage(html) {
-  $(".user-form").html(html)
+  $('.user-form').html(html)
 }
 
 
 //Handlers:
 function handleClickStart() {
-  $("main").on("click", ".start-button", (event) => {
+  $('main').on('click', '.start-button', (event) => {
       displayInputPage()
   })
 }
 
 function handleSubmitBMR() {
-  $('main').on("submit", ".bmr-form", event => {
+  $('main').on('submit', '.bmr-form', event => {
     event.preventDefault();
-    return `<span>${calculateBMR(gender) ? "male" : "female"}</span>`
+    return `<span>${calculateBMR(gender) ? 'male' : 'female'}</span>`
   });
 }
 
 function handleSubmitCalories() {
-  $('main').on("submit", ".calorie-form", event => {
+  $('main').on('submit', '.calorie-form', event => {
     event.preventDefault();
-    const calorieQuery = $(".calorie-query");
+    const calorieQuery = $('.calorie-query');
     const calories = calorieQuery.val();
     generateCalorieBurn(calories);
     getVideos(caloricDeficit);
-    displayVideoResults();
+    displayVideoResults(responseJson);
   });
 }
 
