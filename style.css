@@ -9,3 +9,9 @@ body {
 .hidden {
     display: none;
   }
+
+ul {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+}

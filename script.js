@@ -12,7 +12,7 @@ let food = []; //map and join, think STORE databank from quiz app
 
 function generateBMR() {
   console.log("BMR calculated");
-  if ($(".gender") === "Male") {
+  if ($(".gender") === "male") {
     return ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 5
   } else {
     return ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 161 
@@ -21,8 +21,8 @@ function generateBMR() {
 
 //Will this operate to sum all the calories?
 function calculateCalories() {
-  const calories = responseJson.calories; //need to acquire 'nf_calories' from API and sum
-  return responseJson.food_name.filter(food => food_name.calories).length;
+  const calories = responseJson.calories; //need to acquire 'calories' from API and sum
+  return responseJson.ingr.filter(food => ingr.calories).val();
 }
 
 function generateCalorieBurn() {
@@ -63,9 +63,9 @@ function generateInputPage(food) {
             <ul>
               <li>
                 <label for="Gender">Gender:</label>
-                <select name="cars" id="cars">
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                <select name="gender" id="gender">
+                  <option value="male">male</option>
+                  <option value="female">female</option>
                 </select>
               </li>
               <li>Height:</li>
@@ -76,7 +76,6 @@ function generateInputPage(food) {
               <input type="number" id="age" name="age" placeholder="23 (years)" required>
             </ul>
               <button type="submit" >Calculate BMR</button>
-                ${generateBMR()}
         </fieldset>
       </form>
       
@@ -96,7 +95,6 @@ function generateInputPage(food) {
             <input type="number" class="calorie-query" placeholder="2000" required>
             <button type="submit">Submit</button>
         </fieldset>
-        
       </form>
       `
     /*2nd form: user adds foods or daily calories and submits for total calories --> calculate BMR --> 
@@ -114,17 +112,19 @@ function formatQueryParams(params) {
 
 
 
-//Nutritionix Data:
-function getFood(food_name) {
+//Edamam Data:
+function getFood(foodId) {
   const headers = {
     app_id: edamamId,
-    app_key: edamamApiKey
+    app_key: edamamApiKey,
+    "Access-Control-Allow-Origin": "https://schism578.github.io/api-hack/"
   }
   const params = {
-    query: food_name
+    ingr: "",
+    calories: ""
   };
 
-  //Can this be duplicated like this for both Nutritionix and YouTube fetches?
+  //Can this be duplicated like this for both Edamam and YouTube fetches?
   const queryString = formatQueryParams(params);
   const foodURL = edamamApiURL + '?' + queryString;
 
@@ -219,7 +219,7 @@ function handleSubmitBMR() {
 function handleSubmitFood() {
   $('main').on("submit", ".food-form", event => {
     event.preventDefault();
-  const foodQuery = $(".food-query")
+    const foodQuery = $(".food-query")
     const foodName = foodQuery.val()
     foodQuery.val("")
     getFood(foodName).then(responseJson => console.dir(responseJson))
