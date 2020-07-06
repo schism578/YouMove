@@ -6,10 +6,14 @@ let caloricDeficit = $(".calorie-query") - calculateBMR();
 
 //Calculators:
 function calculateBMR() {
-  if ($(".gender") === "male") {
-    return ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 5
+  const weight = parseInt( $("#weight").val() );
+  const height = parseInt( $("#height").val() );
+  const age = parseInt( $("#age").val() );
+
+  if ($("#gender").val() === "male") {
+    return (weight * 0.453592) * 10 + (height * 2.54) * 6.25 - age * 5 + 5
   } else {
-    return ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 161
+    return (weight * 0.453592) * 10 + (height * 2.54) * 6.25 - age * 5 + 161
   }
 }
 
@@ -99,7 +103,7 @@ function getVideos(caloricDeficit, maxResults=3) {
   }
 
   const queryString = formatQueryParams(params)
-  const videoURL = videoSearchURL + '?' + queryString;
+  const videoURL = videoSearchURL + '?' + queryString
 
   console.log(videoURL);
 
@@ -110,12 +114,11 @@ function getVideos(caloricDeficit, maxResults=3) {
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayResults(responseJson))
+    .then(responseJson => displayVideoResults(responseJson))
     .catch(err => {
       $('#error-message').text(`Something went wrong with YouTube: ${err.message}`);
     });
 }
-
 
 
 //Page Displayers:
@@ -133,7 +136,6 @@ function displayPage(html) {
 }
 
 
-
 //Handlers:
 function handleClickStart() {
   $("main").on("click", ".start-button", (event) => {
@@ -144,9 +146,7 @@ function handleClickStart() {
 function handleSubmitBMR() {
   $('main').on("submit", ".bmr-form", event => {
     event.preventDefault();
-    const male = ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 5;
-    const female = ($(".weight") * 0.453592) * 10 + ($(".height") * 2.54) * 6.25 - $(".age") * 5 + 161;
-    return `<span>${calculateBMR(gender) ? male : female}</span>`
+    return `<span>${calculateBMR(gender) ? "male" : "female"}</span>`
   });
 }
 
@@ -156,7 +156,8 @@ function handleSubmitCalories() {
     const calorieQuery = $(".calorie-query");
     const calories = calorieQuery.val();
     generateCalorieBurn(calories);
-    displayVideoResults(caloricDeficit);
+    getVideos(caloricDeficit);
+    displayVideoResults();
   });
 }
 
