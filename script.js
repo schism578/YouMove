@@ -72,12 +72,12 @@ function formatQueryParams(params) {
   return queryItems.join('&');
 }
 
-
 //YouTube Data:
 function displayVideoResults(responseJson) {
   console.log(responseJson);
   $('#results-list').empty();
   let output = '';
+  console.log(responseJson.items)
   for (let i = 0; i < responseJson.items.length; i++){
       output +=
       `<li><h3>${responseJson.items[i].snippet.title}</h3>
@@ -86,6 +86,7 @@ function displayVideoResults(responseJson) {
       </li>
       `//add 'other' links
     };
+    console.log(output);
     $('#results-list').append(output);
   $('#results').removeClass('hidden');
 }
@@ -120,7 +121,6 @@ function getVideos(maxResults=3) {
     });
 }
 
-
 //Page Displayers:
 function displayStartPage() {
   displayPage(generateStartPage())
@@ -135,7 +135,6 @@ function displayPage(html) {
   $('.user-form').html(html)
 }
 
-
 //Handlers:
 function handleClickStart() {
   $('main').on('click', '.start-button', (event) => {
@@ -146,7 +145,9 @@ function handleClickStart() {
 function handleSubmitBMR() {
   $('main').on('submit', '.bmr-form', event => {
     event.preventDefault();
-    return $('span').html(`${calculateBMR(gender) ? 'male' : 'female'}`);
+    const htmlBMR = `${calculateBMR(gender)}`;
+    const displayBMR = ((htmlBMR/100).toFixed()*100);
+    return $('span').html(`${displayBMR} calories per day`)
   });
 }
 
