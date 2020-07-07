@@ -7,7 +7,6 @@
     <title>You Move</title>
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="style.css">
-    <!--<script src="https://developer.edamam.com/attribution/badge.js"></script>-->
 </head>
 <body>
     <main>
@@ -19,15 +18,17 @@
                     sitting still).</p> 
                 <p>Then enter food items or your daily calorie
                     intake to calculate a "goal caloric deficit" based against your BMR.</p>
-                <p>Workout videos you can do at home will display or follow one of the 
-                    links below them to do something different!</p>
+                <p>Workout videos or healthy recipes you can do at home will display or follow one of the 
+                    links below them to try something different!</p>
                 <button type="button" class="start-button">Get Started!</button>
             </section>
-        <section class="hidden" id="results">
-            <h2>Search results</h2>
-            <ul id="results-list">
-            </ul>
-        </section>
+            <p id="error-message" class="error-message"></p>
+            <section id="results" class="hidden">
+                <h2>Search Results:</h2>
+                <h3></h3>
+                <ul id="results-list">
+                </ul>
+              </section>
     </main>
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="script.js"></script>

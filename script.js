@@ -1,7 +1,7 @@
 'use strict';
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
-const googleApiKey = 'AIzaSyCxrK1XHc-SVjAMhKBwz6-Z0oZCvZrXk-A';
+const googleApiKey = 'AIzaSyA6XMq_0WnzhkLIbnoT3QD0fCBn_WeVGcc';
 
 //Calculators:
 function calculateBMR() {
@@ -25,8 +25,8 @@ function generateStartPage() {
           sitting still).</p> 
       <p>Then enter your daily calorie intake to calculate a "goal caloric deficit" 
           based against your BMR.</p>
-      <p>Workout videos you can do at home will display or follow one of the 
-          links below them to do something different!</p>
+      <p>Workout videos or healthy recipes you can do at home will display or follow one of the 
+          links below them to try something different!</p>
       `
 }
 
@@ -50,12 +50,7 @@ function generateInputPage() {
               <li>Age:</li>
               <input type='number' id='age' name='age' placeholder='23 (years)' required>
             </ul>
-              <button type='submit' >Calculate BMR</button>
-              <span></span>
         </fieldset>
-      </form>
-
-      <form class='calorie-form'>
         <fieldset>
           <legend>Enter Your Daily Calories:</legend>
             <input type='number' class='calorie-query' placeholder='2000' required>
@@ -72,35 +67,47 @@ function formatQueryParams(params) {
   return queryItems.join('&');
 }
 
+function displayInfo(bmr, caloricDeficit) {
+  $('h3').text(`Your BMR is ${bmr} calories. Based on your entered daily calories, 
+  you want to have a caloric deficit of ${caloricDeficit} calories.`)
+}
 //YouTube Data:
 function displayVideoResults(responseJson) {
   console.log(responseJson);
   $('#results-list').empty();
-  let output = '';
-  console.log(responseJson.items)
   for (let i = 0; i < responseJson.items.length; i++){
-      output +=
-      `<li><h3>${responseJson.items[i].snippet.title}</h3>
+    $('#results-list').append(
+      `<li><h4>${responseJson.items[i].snippet.title}</h4>
       <p>${responseJson.items[i].snippet.description}</p>
-      <video src='${responseJson.items[i].search}' controls>(“Video Not Supported”)</video>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/${responseJson.items[i].id.videoId}" 
+      frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen></iframe>
       </li>
+      <a href="https://www.google.com/maps">Outdoor Yoga</a>
+      <a href="https://www.meetup.com/">Cycling Groups</a>
+      <a href="https://www.meetup.com/">Running Groups</a>
+      <a href="https://www.meetup.com/">Fitness Meetups</a>
+      <a href="https://www.alltrails.com/">Hiking Trails</a>
+      <a href="https://www.verywellfit.com/best-online-exercise-classes-4163381">Online Fitness</a>
+      <a href="https://www.google.com/maps">Local Gyms</a>
+
       `//add 'other' links
-    };
-    console.log(output);
-    $('#results-list').append(output);
+    )};
   $('#results').removeClass('hidden');
 }
 
 function getVideos(maxResults=3) {
-  const caloricDeficit = $('.calorie-query').val() - calculateBMR();
+  const bmr = calculateBMR();
+  const searchBmr = ((bmr/100).toFixed()*100)
+  const caloricDeficit = $('.calorie-query').val() - bmr;
   const searchCalories = ((caloricDeficit/100).toFixed()*100);
   const params = {
     key: googleApiKey,
-    q: `${searchCalories} calorie workout`,
+    q: `${searchCalories} calorie ${caloricDeficit > 0 ? 'workout' : 'recipe'}`,
     part: 'snippet',
     maxResults,
     type: 'video',
-    list: 'exercise'
+    list: `${caloricDeficit > 0 ? 'exercise' : 'cooking'}`
   }
 
   const queryString = formatQueryParams(params)
@@ -115,7 +122,11 @@ function getVideos(maxResults=3) {
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => displayVideoResults(responseJson))
+    .then(responseJson => {
+      displayInfo(searchBmr, searchCalories)
+      displayVideoResults(responseJson)
+    })
+    
     .catch(err => {
       $('#error-message').text(`Something went wrong with YouTube: ${err.message}`);
     });
@@ -142,17 +153,8 @@ function handleClickStart() {
   })
 }
 
-function handleSubmitBMR() {
-  $('main').on('submit', '.bmr-form', event => {
-    event.preventDefault();
-    const htmlBMR = `${calculateBMR(gender)}`;
-    const displayBMR = ((htmlBMR/100).toFixed()*100);
-    return $('span').html(`${displayBMR} calories per day`)
-  });
-}
-
 function handleSubmitCalories() {
-  $('main').on('submit', '.calorie-form', event => {
+  $('main').on('submit', '.bmr-form', event => {
     event.preventDefault();
     getVideos();
   });
@@ -160,7 +162,6 @@ function handleSubmitCalories() {
 
 function setupEventHandlers() {
   handleClickStart()
-  handleSubmitBMR()
   handleSubmitCalories()
 }
 
