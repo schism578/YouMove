@@ -5,6 +5,7 @@ const googleApiKey = 'AIzaSyCxrK1XHc-SVjAMhKBwz6-Z0oZCvZrXk-A';
 
 //Calculators:
 function calculateBMR() {
+  console.log('BMR calculated');
   const weight = parseInt( $('#weight').val() );
   const height = parseInt( $('#height').val() );
   const age = parseInt( $('#age').val() );
@@ -15,7 +16,6 @@ function calculateBMR() {
     return (weight * 0.453592) * 10 + (height * 2.54) * 6.25 - age * 5 + 161
   }
 }
-
 
 //Page Generators:
 function generateStartPage() {
@@ -51,6 +51,7 @@ function generateInputPage() {
               <input type='number' id='age' name='age' placeholder='23 (years)' required>
             </ul>
               <button type='submit' >Calculate BMR</button>
+              <span></span>
         </fieldset>
       </form>
 
@@ -76,22 +77,25 @@ function formatQueryParams(params) {
 function displayVideoResults(responseJson) {
   console.log(responseJson);
   $('#results-list').empty();
+  let output = '';
   for (let i = 0; i < responseJson.items.length; i++){
-    $('#results-list').append(
+      output +=
       `<li><h3>${responseJson.items[i].snippet.title}</h3>
       <p>${responseJson.items[i].snippet.description}</p>
       <video src='${responseJson.items[i].search}' controls>(“Video Not Supported”)</video>
       </li>
       `//add 'other' links
-    )};
+    };
+    $('#results-list').append(output);
   $('#results').removeClass('hidden');
 }
 
 function getVideos(maxResults=3) {
   const caloricDeficit = $('.calorie-query').val() - calculateBMR();
+  const searchCalories = ((caloricDeficit/100).toFixed()*100);
   const params = {
     key: googleApiKey,
-    q: `${caloricDeficit} calorie workout`,
+    q: `${searchCalories} calorie workout`,
     part: 'snippet',
     maxResults,
     type: 'video',
@@ -142,7 +146,7 @@ function handleClickStart() {
 function handleSubmitBMR() {
   $('main').on('submit', '.bmr-form', event => {
     event.preventDefault();
-    return `<span>${calculateBMR(gender) ? 'male' : 'female'}</span>`
+    return $('span').html(`${calculateBMR(gender) ? 'male' : 'female'}`);
   });
 }
 
@@ -150,7 +154,6 @@ function handleSubmitCalories() {
   $('main').on('submit', '.calorie-form', event => {
     event.preventDefault();
     getVideos();
-    displayVideoResults();
   });
 }
 
