@@ -2,7 +2,6 @@
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
 const googleApiKey = 'AIzaSyCxrK1XHc-SVjAMhKBwz6-Z0oZCvZrXk-A';
-let caloricDeficit = $('.calorie-query') - calculateBMR();
 
 //Calculators:
 function calculateBMR() {
@@ -15,10 +14,6 @@ function calculateBMR() {
   } else {
     return (weight * 0.453592) * 10 + (height * 2.54) * 6.25 - age * 5 + 161
   }
-}
-
-function generateCalorieBurn() {
-  return `${caloricDeficit}`
 }
 
 
@@ -35,7 +30,7 @@ function generateStartPage() {
       `
 }
 
-function generateInputPage(food) {
+function generateInputPage() {
       return `
       <form class='bmr-form'>
         <fieldset name='user-search'>
@@ -92,10 +87,11 @@ function displayVideoResults(responseJson) {
   $('#results').removeClass('hidden');
 }
 
-function getVideos(caloricDeficit, maxResults=3) {
+function getVideos(maxResults=3) {
+  const caloricDeficit = $('.calorie-query').val() - calculateBMR();
   const params = {
     key: googleApiKey,
-    q: `${caloricDeficit} calories workout`,
+    q: `${caloricDeficit} calorie workout`,
     part: 'snippet',
     maxResults,
     type: 'video',
@@ -153,11 +149,8 @@ function handleSubmitBMR() {
 function handleSubmitCalories() {
   $('main').on('submit', '.calorie-form', event => {
     event.preventDefault();
-    const calorieQuery = $('.calorie-query');
-    const calories = calorieQuery.val();
-    generateCalorieBurn(calories);
-    getVideos(caloricDeficit);
-    displayVideoResults(responseJson);
+    getVideos();
+    displayVideoResults();
   });
 }
 
