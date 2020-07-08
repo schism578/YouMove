@@ -1,11 +1,10 @@
 'use strict';
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
-const googleApiKey = 'AIzaSyA6XMq_0WnzhkLIbnoT3QD0fCBn_WeVGcc';
+const googleApiKey = 'AIzaSyC1N7BXv1cLLheo2LWLCcOhgtKzpgYbIQM';
 
 //Calculators:
 function calculateBMR() {
-  console.log('BMR calculated');
   const weight = parseInt( $('#weight').val() );
   const height = parseInt( $('#height').val() );
   const age = parseInt( $('#age').val() );
@@ -32,28 +31,28 @@ function generateStartPage() {
 
 function generateInputPage() {
       return `
-      <form class='bmr-form'>
+      <form class='bmr-form' method="post">
         <fieldset name='user-search'>
           <legend>Enter Your Info:</legend>
             <ul>
               <li>
-                <label for='Gender'>Gender:</label>
+                <label for='gender'>Gender:</label>
                 <select name='gender' id='gender'>
-                  <option value='male'>male</option>
                   <option value='female'>female</option>
+                  <option value='male'>male</option>
                 </select>
               </li>
               <li>Height:</li>
-              <input type='number' id='height' name='height' placeholder='70 (inches)' required>
+              <input type='number' id='height' name='height' placeholder='70 (inches)' min="1" step="1" required>
               <li>Weight:</li>
-              <input type='number' id='weight' name='weight' placeholder='170 (pounds)' required>
+              <input type='number' id='weight' name='weight' placeholder='170 (pounds)' min="1" step="1" required>
               <li>Age:</li>
-              <input type='number' id='age' name='age' placeholder='23 (years)' required>
+              <input type='number' id='age' name='age' placeholder='23 (years)' min="1" step="1" required>
             </ul>
         </fieldset>
         <fieldset>
           <legend>Enter Your Daily Calories:</legend>
-            <input type='number' class='calorie-query' placeholder='2000' required>
+            <input type='number' class='calorie-query' placeholder='2000' min="1" step="1" required>
             <button type='submit'>Submit</button>
         </fieldset>
       </form>
@@ -73,25 +72,18 @@ function displayInfo(bmr, caloricDeficit) {
 }
 //YouTube Data:
 function displayVideoResults(responseJson) {
-  console.log(responseJson);
   $('#results-list').empty();
   for (let i = 0; i < responseJson.items.length; i++){
     $('#results-list').append(
       `<li><h4>${responseJson.items[i].snippet.title}</h4>
       <p>${responseJson.items[i].snippet.description}</p>
+      <div class="videoWrapper">
       <iframe width="560" height="315" src="https://www.youtube.com/embed/${responseJson.items[i].id.videoId}" 
       frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
       allowfullscreen></iframe>
+      </div>
       </li>
-      <a href="https://www.google.com/maps">Outdoor Yoga</a>
-      <a href="https://www.meetup.com/">Cycling Groups</a>
-      <a href="https://www.meetup.com/">Running Groups</a>
-      <a href="https://www.meetup.com/">Fitness Meetups</a>
-      <a href="https://www.alltrails.com/">Hiking Trails</a>
-      <a href="https://www.verywellfit.com/best-online-exercise-classes-4163381">Online Fitness</a>
-      <a href="https://www.google.com/maps">Local Gyms</a>
-
-      `//add 'other' links
+      `
     )};
   $('#results').removeClass('hidden');
 }
@@ -112,8 +104,6 @@ function getVideos(maxResults=3) {
 
   const queryString = formatQueryParams(params)
   const videoURL = videoSearchURL + '?' + queryString
-
-  console.log(videoURL);
 
   return fetch(videoURL)
     .then(response => {
@@ -138,7 +128,6 @@ function displayStartPage() {
 }
 
 function displayInputPage() {
-  console.log("displaying page")
   displayPage(generateInputPage())
 }
 
