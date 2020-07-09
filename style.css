@@ -1,9 +1,44 @@
-* {
-    box-sizing: border-box;
-}
-
 body {
     text-align: center;
+    color: rgb(255, 255, 255);
+    background: url(images/youmove_background1.jpg)center center no-repeat fixed;
+    background-size: cover;
+}
+
+.user-form {
+    margin: 25px auto;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#app_logo {
+    width: 2.4em;
+    height: 1.8em;
+    border-radius: 35%;
+}
+
+.start_header {
+    color: rgb(199, 24, 24);
+    font-size: 24px;
+}
+
+h1 {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.start_header, legend, li {
+    font-family: 'Stardos Stencil', cursive;
+}
+
+p {
+    font-family: 'Monda', sans-serif;
+    max-width: 60%;
+    margin: 20px auto;
 }
 
 .hidden {
@@ -14,43 +49,49 @@ li, label, select {
     margin: 0.5em auto;
 }
 
+label, select {
+    display: block;
+}
+
+legend, li, label {
+    font-size: 18px;
+
+}
+
 ul {
     list-style-type: none;
     margin: 0 auto;
     padding-left: 0;
 }
 
-label, select {
-    display: block;
-}
-
 .calorie-query {
     width: 25%;
 }
 
-a {
-    outline: none;
-    text-decoration: none;
-    padding: 2px 1px 0;
+h3 {
+    color: rgb(199, 24, 24);
 }
 
 a:link, button {
-    color: lightskyblue;
-}
-
-a:visited {
-    color: purple;
+    margin: 10px auto;
+    padding: 2px 2px;
+    border-radius: 4px;
+    color: white;
+    background-color: rgb(192, 17, 17);
 }
 
 a:focus {
-    border-bottom: 1px solid;
-    background: steelblue;
+    background: rgb(167, 162, 162);
 }
 
-a:hover, button:hover {
-    border-bottom: 1px solid;     
-    background: darkcyan;
+a:link:hover, button:hover {
+    background: lightgray;
+    color: black;
     cursor: pointer;
+}
+
+a:visited {
+    color: inherit;
 }
 
 .videoWrapper {
