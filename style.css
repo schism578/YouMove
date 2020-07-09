@@ -91,7 +91,8 @@ a:link:hover, button:hover {
 }
 
 a:visited {
-    color: inherit;
+    background-color: gb(192, 17, 17);
+    color: black;
 }
 
 .videoWrapper {
