@@ -1,7 +1,7 @@
 'use strict';
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
-const googleApiKey = 'AIzaSyD9VLog9FK1jASR9FKtOHhr19A4s1Rkxqo';
+const googleApiKey = 'AIzaSyCRXTxXhA-sn5HrsedM2SLF7AblQzkUEW8';
 
 //Calculators:
 function calculateBMR() {
