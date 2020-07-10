@@ -12,4 +12,4 @@ Screenshots:
 
 ![alt text](https://github.com/schism578/api-hack/blob/master/images/IMG_4408.jpg?raw=true)
 ![alt text](https://github.com/schism578/api-hack/blob/master/images/IMG_4409.jpg?raw=true)
-![alt text](https://github.com/schism578/api-hack/blob/master/images/IMG_4410.jpg?raw=true)
+![alt text](https://github.com/schism578/api-hack/blob/master/images/IMG_4410.png?raw=true)
