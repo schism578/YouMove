@@ -116,4 +116,8 @@ fieldset {
     margin: auto;
 }
 
+#results-list {
+    width: 60%;
+}
+
 }

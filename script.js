@@ -1,7 +1,7 @@
 'use strict';
  
 const videoSearchURL = 'https://www.googleapis.com/youtube/v3/search';
-const googleApiKey = 'AIzaSyCRXTxXhA-sn5HrsedM2SLF7AblQzkUEW8';
+const googleApiKey = 'AIzaSyAe9bRrAFi0A_gd7XRqp4nCqQ3YyDAf8mw';
 
 //Calculators:
 function calculateBMR() {
@@ -67,8 +67,9 @@ function formatQueryParams(params) {
 }
 
 function displayInfo(bmr, caloricDeficit) {
-  $('h3').text(`Your BMR is ${bmr} calories. Based on your entered daily calories, 
-  you want to have a caloric deficit of ${caloricDeficit} calories.`)
+  $('span').text(`Your BMR is ${bmr} calories. Based on your entered daily calories, 
+  you want to have a caloric deficit of ${caloricDeficit} calories. Here are the results
+  based on your caloric deficit:`)
 }
 //YouTube Data:
 function displayVideoResults(responseJson) {
