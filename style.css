@@ -35,7 +35,7 @@ h1 {
     font-family: 'Stardos Stencil', cursive;
 }
 
-p {
+p, span {
     font-family: 'Monda', sans-serif;
     max-width: 60%;
     margin: 20px auto;
@@ -68,8 +68,10 @@ ul {
     width: 25%;
 }
 
-h3 {
+span {
     color: rgb(199, 24, 24);
+    font-size: 18px;
+    background-color: rgba(70, 70, 70, 0.6);
 }
 
 a:link, button {
